@@ -14,10 +14,12 @@ ADMIN_USER_ID = 6009484587
 def verify_signature(payload, signature):
     secret = PAYSTACK_SECRET_KEY.encode('utf-8')
     computed = hmac.new(secret, payload, hashlib.sha512).hexdigest()
+    print(f"Signature verification: Expected={signature}, Computed={computed}")
     return computed == signature
 
 @app.route('/', methods=['GET'])
 def home():
+    print("Root endpoint accessed")
     return Response("Webhook server is running! Use /webhook for Paystack events.", status=200)
 
 @app.route('/webhook', methods=['POST'])
@@ -60,4 +62,5 @@ def send_telegram_message(chat_id, text, callback_data=None):
     return response.status_code == 200
 
 if __name__ == '__main__':
+    print("Starting Flask app...")
     app.run(host='0.0.0.0', port=5000)
